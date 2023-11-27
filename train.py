@@ -130,6 +130,11 @@ def main(args):
     # Perform training.
     train(cfg, args)
 
+def get_cfg():
+    args = default_argument_parser().parse_args()
+    cfg = setup(args)
+    return cfg
+
 
 if __name__ == '__main__':
     args = default_argument_parser().parse_args()
