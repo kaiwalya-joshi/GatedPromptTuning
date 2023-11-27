@@ -30,11 +30,13 @@ def build_mae_model(
     out_dim = model.embed_dim
 
     ckpt = os.path.join(model_root, MODEL_ZOO[model_type])
-    checkpoint = torch.load(ckpt, map_location="cpu")
-    state_dict = checkpoint['model']
+    if os.path.exists(ckpt):
+        checkpoint = torch.load(ckpt, map_location="cpu")
+        state_dict = checkpoint['model']
 
-    msg = model.load_state_dict(state_dict, strict=False)
-    print(msg)
+        msg = model.load_state_dict(state_dict, strict=False)
+        print(msg)
+        
     model.head = torch.nn.Identity()
     return model, out_dim
 

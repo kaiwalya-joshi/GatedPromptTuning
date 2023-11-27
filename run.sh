@@ -11,7 +11,7 @@ model_type="ssl-vit"
 
 if [ $data_name = "cub" ]
 then
-  data_path=./data/CUB_200_2011
+  data_path=./src/data/CUB_200_2011
   data_name="CUB"
   num_class=200
 elif [ $data_name = "dogs" ] 

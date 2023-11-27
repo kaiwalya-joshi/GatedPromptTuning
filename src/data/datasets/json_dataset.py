@@ -12,6 +12,7 @@ from collections import Counter
 from ..transforms import get_transforms
 from ...utils import logging
 from ...utils.io_utils import read_json
+import json
 logger = logging.get_logger("visual_prompt")
 
 
@@ -35,24 +36,55 @@ class JSONDataset(torch.utils.data.Dataset):
         self.transform = get_transforms(split, cfg.DATA.CROPSIZE)
     
     def get_anno(self):
+        self._construct_anno()
         anno_path = os.path.join(self.data_dir, "{}.json".format(self._split))
-        if "train" in self._split:
-            if self.data_percentage < 1.0:
-                anno_path = os.path.join(
-                    self.data_dir,
-                    "{}_{}.json".format(self._split, self.data_percentage)
-                )
+        # if "train" in self._split:
+        #     if self.data_percentage < 1.0:
+        #         anno_path = os.path.join(
+        #             self.data_dir,
+        #             "{}_{}.json".format(self._split, self.data_percentage)
+        #         )
         assert os.path.exists(anno_path), "{} dir not found".format(anno_path)
 
         return read_json(anno_path)
 
     def get_imagedir(self):
         raise NotImplementedError()
+    
+    def _construct_anno(self):
+        images_path = 'images.txt'
+        train_test_split = 'train_test_split.txt'
+
+        with open(os.path.join(self.data_dir, images_path)) as f:
+            lines = f.readlines()
+        
+        with open(os.path.join(self.data_dir, train_test_split)) as f:
+            train_test_lines = f.readlines()
+
+        train_ann = {}
+        val_ann = {}
+        for line, train_test in zip(lines, train_test_lines):
+            img_path = line.split()[1]
+            label = int(img_path.split('.')[0])
+
+            if train_test.split()[1] == '1':
+                train_ann[img_path] = label
+            else:
+                val_ann[img_path] = label
+        
+        with open(os.path.join(self.data_dir, 'train.json'), 'w') as f:
+            json.dump(train_ann, f)
+
+        with open(os.path.join(self.data_dir, 'val.json'), 'w') as f:
+            json.dump(val_ann, f)
+
+        with open(os.path.join(self.data_dir, 'test.json'), 'w') as f:
+            json.dump(val_ann, f)
 
     def _construct_imdb(self, cfg):
         """Constructs the imdb."""
-
         img_dir = self.get_imagedir()
+        # img_dir = 'src/data/CUB_200_2011/images.txt'
         assert os.path.exists(img_dir), "{} dir not found".format(img_dir)
 
         anno = self.get_anno()

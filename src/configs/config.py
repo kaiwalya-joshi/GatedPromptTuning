@@ -19,7 +19,7 @@ _C.RUN_N_TIMES = 5
 _C.CUDNN_BENCHMARK = False
 
 # Number of GPUs to use (applies to both training and testing)
-_C.NUM_GPUS = 1
+_C.NUM_GPUS = 0
 _C.NUM_SHARDS = 1
 
 # Note that non-determinism may still be present due to non-deterministic
