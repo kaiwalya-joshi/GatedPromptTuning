@@ -51,8 +51,10 @@ def log_model_info(model, verbose=False):
 def get_current_device():
     if torch.cuda.is_available():
         # Determine the GPU used by the current process
+        print('cuda')
         cur_device = torch.device('cuda:0')
     else:
+        print('cpu')
         cur_device = torch.device('cpu')
     return cur_device
 
