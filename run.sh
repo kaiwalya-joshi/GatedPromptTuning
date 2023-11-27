@@ -161,4 +161,29 @@ python3 train.py \
         MODEL.PROMPT.GATE_INIT "${gate_init}" \
         MODEL.PROMPT.VIT_POOL_TYPE "original" \
         OUTPUT_DIR "${output_dir}/seed${seed}" \
+
+
+  # python3 get_args.py \
+  #       --config-file configs/base-prompt.yaml \
+  #       DATA.BATCH_SIZE "${batch_size}" \
+  #       DATA.CROPSIZE "224" \
+  #       MODEL.PROMPT.NUM_TOKENS "${num_tokens}" \
+  #       SOLVER.WEIGHT_DECAY "0.0" \
+  #       SOLVER.BASE_LR "${base_lr}" \
+  #       MODEL.PROMPT.DROPOUT "0.1" \
+  #       SEED ${seed} \
+  #       MODEL.TYPE "${model_type}" \
+  #       MODEL.PROMPT.DEEP "False" \
+  #       MODEL.MODEL_ROOT "${model_root}" \
+  #       DATA.DATAPATH "${data_path}" \
+  #       DATA.NAME "${data_name}" \
+  #       DATA.FEATURE "${encoder}" \
+  #       DATA.NUMBER_CLASSES "${num_class}" \
+  #       MODEL.TRANSFER_TYPE "prompt" \
+  #       MODEL.PROMPT.INITIATION "random" \
+  #       MODEL.PROMPT.TEMP_LEARN "True" \
+  #       MODEL.PROMPT.GATE_PRIOR "True" \
+  #       MODEL.PROMPT.GATE_INIT "${gate_init}" \
+  #       MODEL.PROMPT.VIT_POOL_TYPE "original" \
+  #       OUTPUT_DIR "${output_dir}/seed${seed}" \
         

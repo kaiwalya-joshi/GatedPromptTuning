@@ -125,15 +125,10 @@ def main(args):
     """main function to call from workflow"""
     # set up cfg and args
     cfg = setup(args)
-    with open(os.path.join(cfg.OUTPUT_DIR, 'configs.yaml'), 'w') as f:
+    with open('configs.yaml', 'w') as f:
         f.write(cfg.dump())
     # Perform training.
-    train(cfg, args)
-
-def get_cfg():
-    args = default_argument_parser().parse_args()
-    cfg = setup(args)
-    return cfg
+    # train(cfg, args)
 
 
 if __name__ == '__main__':
