@@ -60,8 +60,10 @@ def get_current_device():
 
 
 def load_model_to_device(model, cfg):
+    device = 'cuda' if torch.cuda.is_available() else 'cpu' 
     cur_device = get_current_device()
     if torch.cuda.is_available():
+        print('model is set to cuda')
         # Transfer the model to the current GPU device
         model = model.cuda(device=cur_device)
         # Use multi-process data parallel model in the multi-gpu setting
@@ -72,5 +74,5 @@ def load_model_to_device(model, cfg):
                 find_unused_parameters=True,
             )
     else:
-        model = model.to(cur_device)
+        model = model.to(device)
     return model, cur_device
