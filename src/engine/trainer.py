@@ -171,9 +171,9 @@ class Trainer():
             end = time.time()
 
             for idx, input_data in enumerate(train_loader):
-                if self.cfg.DBG and idx == 20:
-                    # if debugging, only need to see the first few iterations
-                    break
+                # if self.cfg.DBG and idx == 20:
+                #     # if debugging, only need to see the first few iterations
+                #     break
                 
                 X, targets = self.get_input(input_data)
                 logger.info(f'shape of image = {X.shape}')
