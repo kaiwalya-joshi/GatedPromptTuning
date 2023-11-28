@@ -128,7 +128,7 @@ def main(args):
     with open('configs.yaml', 'w') as f:
         f.write(cfg.dump())
     # Perform training.
-    train(cfg, args)
+    # train(cfg, args)
 
 
 if __name__ == '__main__':
