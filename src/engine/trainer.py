@@ -138,6 +138,7 @@ class Trainer():
         self.model.eval()
         # self.save_prompt(0)
         # setup training epoch params
+        ave_training_losses = []
         total_epoch = self.cfg.SOLVER.TOTAL_EPOCH
         total_data = len(train_loader)
         best_epoch = -1
@@ -218,6 +219,7 @@ class Trainer():
                     data_time.avg, batch_time.avg)
                 + "average train loss: {:.4f}".format(losses.avg))
             
+            ave_training_losses.append(losses.ave)
             # update lr, scheduler.step() must be called after optimizer.step() according to the docs: https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate  # noqa
             # self.scheduler.step()
 
@@ -228,10 +230,9 @@ class Trainer():
 
             # eval at each epoch for single gpu training
             self.evaluator.update_iteration(epoch)
-            self.eval_classifier(val_loader, "val", epoch == total_epoch - 1)
+            ave_val_losses = self.eval_classifier(val_loader, "val", epoch == total_epoch - 1)
             if test_loader is not None:
-                self.eval_classifier(
-                    test_loader, "test", epoch == total_epoch - 1)
+                ave_test_losses = self.eval_classifier(test_loader, "test", epoch == total_epoch - 1)
 
             # check the patience
             t_name = "val_" + val_loader.dataset.name
@@ -260,6 +261,8 @@ class Trainer():
                 save_to_disk=True
             ).save("last_model")
 
+        return ave_training_losses, ave_val_losses, ave_test_losses
+
     @torch.no_grad()
     def save_prompt(self, epoch):
         # only save the prompt embed if below conditions are satisfied
@@ -279,6 +282,8 @@ class Trainer():
         batch_time = AverageMeter('Time', ':6.3f')
         data_time = AverageMeter('Data', ':6.3f')
         losses = AverageMeter('Loss', ':.4e')
+
+        ave_classifier_loss = []
 
         log_interval = self.cfg.SOLVER.LOG_EVERY_N
         test_name = prefix + "_" + data_loader.dataset.name
@@ -323,6 +328,10 @@ class Trainer():
             + "avg data time: {:.2e}, avg batch time: {:.4f}, ".format(
                 data_time.avg, batch_time.avg)
             + "average loss: {:.4f}".format(losses.avg))
+        
+        ave_classifier_loss.append(losses.avg)
+
+
         if self.model.side is not None:
             logger.info(
                 "--> side tuning alpha = {:.4f}".format(self.model.side_alpha))
@@ -341,3 +350,4 @@ class Trainer():
             torch.save(out, out_path)
             logger.info(
                 f"Saved logits and targets for {test_name} at {out_path}")
+            
