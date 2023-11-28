@@ -176,8 +176,11 @@ class Trainer():
                     break
                 
                 X, targets = self.get_input(input_data)
-                # logger.info(X.shape)
-                # logger.info(targets.shape)
+                logger.info(f'shape of image = {X.shape}')
+                logger.info(f'shape of targets = {targets.shape}')
+                logger.info(f'device of image = {X.device}')
+                logger.info(f'device of targets = {targets.device}')
+
                 # measure data loading time
                 data_time.update(time.time() - end)
 
