@@ -130,7 +130,7 @@ class Trainer():
         labels = data["label"]
         return inputs, labels
 
-    def train_classifier(self, train_loader, val_loader, test_loader):
+    def train_classifier(self, train_loader, val_loader, test_loader, device):
         """
         Train a classifier using epoch
         """
@@ -176,7 +176,6 @@ class Trainer():
                 #     break
                 
                 X, targets = self.get_input(input_data)
-                device = 'cuda' if torch.cuda.is_available() else 'cpu'
                 X = X.to(device)
                 targets = targets.to(device)
                 # logger.info(f'shape of image = {X.shape}')
