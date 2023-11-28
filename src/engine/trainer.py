@@ -219,7 +219,7 @@ class Trainer():
                     data_time.avg, batch_time.avg)
                 + "average train loss: {:.4f}".format(losses.avg))
             
-            ave_training_losses.append(losses.ave)
+            ave_training_losses.append(losses.avg)
             # update lr, scheduler.step() must be called after optimizer.step() according to the docs: https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate  # noqa
             # self.scheduler.step()
 
