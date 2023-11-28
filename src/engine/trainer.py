@@ -158,10 +158,10 @@ class Trainer():
             batch_time.reset()
             data_time.reset()
 
-            lr = self.scheduler.get_lr()[0]
+            # lr = self.scheduler.get_lr()[0]
             logger.info(
                 "Training {} / {} epoch, with learning rate {}".format(
-                    epoch + 1, total_epoch, lr
+                    epoch + 1, total_epoch, self.cfg.SOLVER.BASE_LR
                 )
             )
 
@@ -219,7 +219,7 @@ class Trainer():
                 + "average train loss: {:.4f}".format(losses.avg))
             
             # update lr, scheduler.step() must be called after optimizer.step() according to the docs: https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate  # noqa
-            self.scheduler.step()
+            # self.scheduler.step()
 
             # Enable eval mode
             self.model.eval()
