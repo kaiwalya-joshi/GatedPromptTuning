@@ -351,3 +351,5 @@ class Trainer():
             logger.info(
                 f"Saved logits and targets for {test_name} at {out_path}")
             
+        return ave_classifier_loss
+            

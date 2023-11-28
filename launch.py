@@ -78,6 +78,12 @@ def default_argument_parser():
         default=None,
         nargs=argparse.REMAINDER,
     )
+    parser.add_argument(
+        "--algo-type",
+        help="Decide what algo we are going to use",
+        default=0,
+        choices=[0, 1]
+    )
     from datetime import datetime
     time_fmt = datetime.now().strftime("%y%m%d-%H-%M-%S")
     parser.add_argument('--id', default=time_fmt)

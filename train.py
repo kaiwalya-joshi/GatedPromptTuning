@@ -32,6 +32,7 @@ def setup(args):
     cfg = get_cfg()
     cfg.merge_from_file(args.config_file)
     cfg.merge_from_list(args.opts)
+    cfg.MODEL.PROMPT.ALGO_TYPE = args.algo_type
 
     # setup dist
     # cfg.DIST_INIT_PATH = "tcp://{}:12399".format(os.environ["SLURMD_NODENAME"])

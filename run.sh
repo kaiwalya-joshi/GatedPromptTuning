@@ -5,6 +5,7 @@ batch_size=$3
 base_lr=$4
 num_tokens=$5
 gate_init=$6
+algo_type=$7
 output_dir=results
 model_type="ssl-vit"
 
@@ -140,6 +141,7 @@ echo $encoder
 
 python3 train.py \
         --config-file configs/base-prompt.yaml \
+        --algo-type ${algo_type} \
         DATA.BATCH_SIZE "${batch_size}" \
         DATA.CROPSIZE "224" \
         MODEL.PROMPT.NUM_TOKENS "${num_tokens}" \

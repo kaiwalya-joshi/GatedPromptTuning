@@ -59,9 +59,16 @@ class PromptedVisionTransformer(VisionTransformer):
         
         # define block-wise learnable gate scalar
         if self.prompt_config.GATE_PRIOR:
-            gate_logit = (-torch.ones(self.prompt_config.GATE_NUM) * self.prompt_config.GATE_INIT)
-            self.gate_logit = nn.Parameter(gate_logit)
-            print(self.gate_logit)
+            if self.prompt_config.ALGO_TYPE == 0:
+                gate_logit = (-torch.ones(self.prompt_config.GATE_NUM) * self.prompt_config.GATE_INIT)
+                self.gate_logit = nn.Parameter(gate_logit)
+                print(self.gate_logit)
+            else:
+                gate_logit1 = (-torch.ones(self.prompt_config.GATE_NUM) * self.prompt_config.GATE_INIT)
+                self.gate_logit1 = nn.Parameter(gate_logit1)
+                gate_logit2 = (-torch.ones(self.prompt_config.GATE_NUM) * self.prompt_config.GATE_INIT)
+                self.gate_logit2 = nn.Parameter(gate_logit2)
+                print(self.gate_logit1)
 
     def incorporate_prompt(self, x):
         # combine prompt embeddings with image-patch embeddings
@@ -136,8 +143,13 @@ class PromptedVisionTransformer(VisionTransformer):
                     
             for i, blk in enumerate(self.blocks):
                 # current block's input prompt representation
+                
                 if self.prompt_config.GATE_PRIOR and i < self.gate_logit.shape[0]:
-                    gate = self.gate_logit[i].sigmoid()
+                    if self.prompt_config.ALGO_TYPE == 0:
+                        gate = self.gate_logit[i].sigmoid()
+                    else:
+                        gate1 = self.gate_logit1[i].sigmoid()
+                        gate2 = self.gate_logit2[i].sigmoid()
                     prompt_in = x[:, 1: 1+self.prompt_config.NUM_TOKENS, :]
 
                 # block-wise learnable temperature
@@ -148,11 +160,18 @@ class PromptedVisionTransformer(VisionTransformer):
                     # current block's output prompt representation
                     prompt_out = x[:, 1: 1+self.prompt_config.NUM_TOKENS, :]
                     # convex combinate input and output prompt representations of current block via learnalbe gate
-                    x = torch.cat([
-                        x[:, 0:1, :], 
-                        gate * prompt_out + (1 - gate) * prompt_in, 
-                        x[:, 1+self.prompt_config.NUM_TOKENS:, :]
-                    ], dim=1)
+                    if self.prompt_config.ALGO_TYPE == 0:
+                        x = torch.cat([
+                            x[:, 0:1, :], 
+                            gate * prompt_out + (1 - gate) * prompt_in, 
+                            x[:, 1+self.prompt_config.NUM_TOKENS:, :]
+                        ], dim=1)
+                    else:
+                        x = torch.cat([
+                            x[:, 0:1, :], 
+                            gate1 * prompt_out + gate2 * prompt_in, 
+                            x[:, 1+self.prompt_config.NUM_TOKENS:, :]
+                        ], dim=1)
         
         norm_func = self.norm
         if self.prompt_config.VIT_POOL_TYPE == "imgprompt_pool":
