@@ -130,7 +130,7 @@ class Trainer():
         labels = data["label"]
         return inputs, labels
 
-    def train_classifier(self, train_loader, val_loader, test_loader, device):
+    def train_classifier(self, train_loader, val_loader, test_loader):
         """
         Train a classifier using epoch
         """
@@ -176,8 +176,8 @@ class Trainer():
                 #     break
                 
                 X, targets = self.get_input(input_data)
-                X = X.to(device)
-                targets = targets.to(device)
+                X = X.to(self.device)
+                targets = targets.to(self.device)
                 # logger.info(f'shape of image = {X.shape}')
                 # logger.info(f'shape of targets = {targets.shape}')
                 logger.info(f'device of image = {X.device}')
