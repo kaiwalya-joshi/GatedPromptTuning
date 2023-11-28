@@ -13,6 +13,7 @@ from ..transforms import get_transforms
 from ...utils import logging
 from ...utils.io_utils import read_json
 import json
+import random
 logger = logging.get_logger("visual_prompt")
 
 
@@ -63,6 +64,7 @@ class JSONDataset(torch.utils.data.Dataset):
 
         train_ann = {}
         val_ann = {}
+        test_ann = {}
         for line, train_test in zip(lines, train_test_lines):
             img_path = line.split()[1]
             label = int(img_path.split('.')[0])
@@ -70,7 +72,11 @@ class JSONDataset(torch.utils.data.Dataset):
             if train_test.split()[1] == '1':
                 train_ann[img_path] = label
             else:
-                val_ann[img_path] = label
+                r = random.randint(0, 1)
+                if r == 1:
+                    val_ann[img_path] = label
+                else:
+                    test_ann[img_path] = label
         
         with open(os.path.join(self.data_dir, 'train.json'), 'w') as f:
             json.dump(train_ann, f)
@@ -79,7 +85,7 @@ class JSONDataset(torch.utils.data.Dataset):
             json.dump(val_ann, f)
 
         with open(os.path.join(self.data_dir, 'test.json'), 'w') as f:
-            json.dump(val_ann, f)
+            json.dump(test_ann, f)
 
     def _construct_imdb(self, cfg):
         """Constructs the imdb."""
