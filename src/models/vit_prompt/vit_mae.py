@@ -64,11 +64,13 @@ class PromptedVisionTransformer(VisionTransformer):
                 self.gate_logit = nn.Parameter(gate_logit)
                 print(self.gate_logit)
             else:
+                gate_logit = (-torch.ones(self.prompt_config.GATE_NUM) * self.prompt_config.GATE_INIT)
+                self.gate_logit = nn.Parameter(gate_logit)
                 gate_logit1 = (-torch.ones(self.prompt_config.GATE_NUM) * self.prompt_config.GATE_INIT)
                 self.gate_logit1 = nn.Parameter(gate_logit1)
                 gate_logit2 = (-torch.ones(self.prompt_config.GATE_NUM) * self.prompt_config.GATE_INIT)
                 self.gate_logit2 = nn.Parameter(gate_logit2)
-                print(self.gate_logit1)
+                print(self.gate_logit)
 
     def incorporate_prompt(self, x):
         # combine prompt embeddings with image-patch embeddings
