@@ -176,10 +176,13 @@ class Trainer():
                 #     break
                 
                 X, targets = self.get_input(input_data)
-                logger.info(f'shape of image = {X.shape}')
-                logger.info(f'shape of targets = {targets.shape}')
-                logger.info(f'device of image = {X.device}')
-                logger.info(f'device of targets = {targets.device}')
+                device = 'cuda' if torch.cuda.is_available() else 'cpu'
+                X = X.to(device)
+                targets = targets.to(device)
+                # logger.info(f'shape of image = {X.shape}')
+                # logger.info(f'shape of targets = {targets.shape}')
+                # logger.info(f'device of image = {X.device}')
+                # logger.info(f'device of targets = {targets.device}')
 
                 # measure data loading time
                 data_time.update(time.time() - end)
